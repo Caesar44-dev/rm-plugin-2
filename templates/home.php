@@ -4,12 +4,12 @@
             <div class="modal-content">
                 <form class="formm" method="post">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="creatermmodalLabel">Crear</h1>
+                        <h1 class="modal-title fs-5" id="creatermmodalLabel">Crear RM</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" name="buscar" id="buscar" value="">
-                        <input type="text" name="sustituir" id="sustituir" value="">
+                        <input type="text" name="buscar" id="buscar" value="" placeholder="Buscar">
+                        <input type="text" name="sustituir" id="sustituir" value="" placeholder="Sustituir">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -27,11 +27,11 @@
             <div class="modal-content">
                 <form class="formm" method="post">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="updatermmodalLabel">Actualizar</h1>
+                        <h1 class="modal-title fs-5" id="updatermmodalLabel">Actualizar RM</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" name="id" id="id" value="">
+                        <input type="text" disabled name="id" id="id" value="">
                         <input type="text" name="buscar" id="buscar" value="">
                         <input type="text" name="sustituir" id="sustituir" value="">
                     </div>
@@ -51,13 +51,13 @@
             <div class="modal-content">
                 <form class="formm" method="post">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deletermmodalLabel">Eliminar</h1>
+                        <h1 class="modal-title fs-5" id="deletermmodalLabel">Eliminar RM</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" name="id" id="id" value="">
-                        <input type="text" name="buscar" id="buscar" value="">
-                        <input type="text" name="sustituir" id="sustituir" value="">
+                        <input type="text" disabled name="id" id="id" value="">
+                        <input type="text" disabled name="buscar" id="buscar" value="">
+                        <input type="text" disabled name="sustituir" id="sustituir" value="">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -72,7 +72,7 @@
 <div class="container">
     <?php
     echo "<h1 class='wp-heading-inline title'>" . get_admin_page_title() . "</h1>";
-    echo '<button type="button" class="button button-secondary" onclick="openModalCreate(\'creatermmodal\')">Añadir nuevo RM</button>';
+    echo '<button type="button" class="button button-secondary" onclick="openModalCreate(\'creatermmodal\')">Añadir Nuevo RM</button>';
 
     global $wpdb;
     $table_rm_plugin = $wpdb->prefix . 'rm_plugin';
@@ -108,9 +108,11 @@
             )
         );
 
+        echo '</br>';
         echo 'Búsqueda y reemplazo completados.';
+        echo '</br>';
     }
-    
+
     if (isset($_POST['buttonupdaterm'])) {
 
         $id = $_POST['id'];
@@ -121,16 +123,20 @@
             $buscar = $_POST['buscar'];
             $sustituir = $_POST['sustituir'];
 
-            // Actualizar la tabla posts
             $table_posts = $wpdb->prefix . 'posts';
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE $table_posts
-                    SET post_content = REPLACE(post_content, %s, %s)
-                    WHERE post_content LIKE %s",
+                    "UPDATE {$wpdb->prefix}posts
+                    SET post_content = REPLACE(post_content, %s, %s),
+                        post_title = REPLACE(post_title, %s, %s),
+                        post_name = REPLACE(post_name, %s, %s)
+                    WHERE post_type = 'post'",
                     $buscar,
                     $sustituir,
-                    '%' . $buscar . '%'
+                    $buscar,
+                    $sustituir,
+                    $buscar,
+                    $sustituir,
                 )
             );
 
@@ -145,7 +151,9 @@
                 )
             );
 
+            echo '</br>';
             echo 'Actualización completada.';
+            echo '</br>';
         }
     }
 
@@ -161,21 +169,27 @@
             )
         );
 
+        echo '</br>';
         echo 'Eliminación completada.';
+        echo '</br>';
 
-        $wpdb->update(
-            $table_rm_plugin,
-            array(
-                'Buscar' => $sustituir,
-                'Sustituir' => $buscar
-            ),
-            array(
-                'Buscar' => $buscar,
-                'Sustituir' => $sustituir
+        $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$wpdb->prefix}posts
+                SET post_content = REPLACE(post_content, %s, %s),
+                    post_title = REPLACE(post_title, %s, %s),
+                    post_name = REPLACE(post_name, %s, %s)
+                WHERE post_type = 'post'",
+                $sustituir,
+                $buscar,
+                $sustituir,
+                $buscar,
+                $sustituir,
+                $buscar,
             )
         );
-
         echo 'Actualización completada.';
+        echo '</br>';
     }
 
     $results = $wpdb->get_results("SELECT * FROM {$table_rm_plugin}");
@@ -207,7 +221,11 @@
         echo '</table>';
         echo '</div>';
     } else {
+        echo '</br>';
+        echo '</br>';
         echo 'No hay registros encontrados.';
+        echo '</br>';
+        echo '</br>';
     }
 
     ?>

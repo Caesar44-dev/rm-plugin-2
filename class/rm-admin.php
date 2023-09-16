@@ -7,18 +7,8 @@ class AdminCallbacks extends RMPlugin
         return require_once("$this->plugin_path/templates/home.php");
     }
 
-    public function createrm()
+    public function importexcel()
     {
-        return require_once("$this->plugin_path/templates/createrm.php");
-    }
-
-    public function updaterm()
-    {
-        return require_once("$this->plugin_path/templates/updaterm.php");
-    }
-
-    public function deleterm()
-    {
-        return require_once("$this->plugin_path/templates/deleterm.php");
+        return require_once("$this->plugin_path/templates/importexcel.php");
     }
 }

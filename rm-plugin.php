@@ -51,7 +51,7 @@ if (!class_exists('RMPlugin')) {
 		public function add_admin_pages()
 		{
 			add_menu_page('RM Plugin', 'RM Plugin', 'manage_options', 'rm_plugin', array($this->callbacks, 'home'), plugin_dir_url(__FILE__) . '/admin/img/icon.svg', 1);
-			add_submenu_page('rm_plugin', 'Agregar desde excel', 'Agregar desde excel', 'manage_options', 'rm_create', array($this->callbacks, 'createrm'));
+			add_submenu_page('rm_plugin', 'Importar CSV', 'Importar CSV', 'manage_options', 'rm_importexcel', array($this->callbacks, 'importexcel'));
 		}
 		
 		function activate()
@@ -62,9 +62,9 @@ if (!class_exists('RMPlugin')) {
 
 		function enqueue()
 		{
-			wp_enqueue_style('rmstyles', plugins_url('/admin/css/rm-plugin.css', __FILE__));
-			wp_enqueue_script('rmscripts', plugins_url('/admin/js/rm-plugin.js', __FILE__), array('jquery'));
-			wp_enqueue_script('bootstrapjs', plugins_url('admin/bootstrap/js/bootstrap.min.js', __FILE__), array('jquery'));
+			wp_enqueue_style('rmstyles', plugins_url('admin/css/rm-plugin.css', __FILE__));
+			wp_enqueue_script('rmscripts', plugins_url('admin/js/rm-plugin.js', __FILE__));
+			wp_enqueue_script('bootstrapjs', plugins_url('admin/bootstrap/js/bootstrap.min.js', __FILE__));
 			wp_enqueue_style('bootstrapcss', plugins_url('admin/bootstrap/css/bootstrap.min.css', __FILE__));
 		}
 	}
@@ -82,25 +82,4 @@ if (!class_exists('RMPlugin')) {
 		__FILE__,
 		array('RMPluginDeactivate', 'deactivate')
 	);
-
-	// add_action('admin_init', 'ss');
-	// function ss()
-	// {
-	// 	if (isset($_POST['buscar']) && isset($_POST['sustituir'])) {
-	// 		global $wpdb;
-
-	// 		$buscar = $_POST['buscar'];
-	// 		$sustituir = $_POST['sustituir'];
-
-	// 		$wpdb->query(
-	// 			$wpdb->prepare(
-	// 				"UPDATE $wpdb->posts SET post_content = REPLACE(post_content, %s, %s)",
-	// 				$buscar,
-	// 				$sustituir
-	// 			)
-	// 		);
-
-	// 		echo 'Búsqueda y reemplazo completados.';
-	// 	}
-	// }
 }
