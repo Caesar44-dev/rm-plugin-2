@@ -1,0 +1,44 @@
+.title{
+    margin-top: 20px;
+}
+
+.tablee {
+    width: calc(100% - 25px);
+    margin-top: 20px;
+}
+
+.formm {
+    max-width: 600px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.formm label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.formm input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.formm input[type="submit"] {
+    background-color: #111;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.formm input[type="submit"]:hover {
+    background-color: #333;
+}
