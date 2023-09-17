@@ -8,6 +8,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <input type="text" name="guid" id="guid" value="" placeholder="Guid">
                         <input type="text" name="buscar" id="buscar" value="" placeholder="Buscar">
                         <input type="text" name="sustituir" id="sustituir" value="" placeholder="Sustituir">
                     </div>
@@ -21,7 +22,7 @@
     </div>
 </div>
 
-<div class="container">
+<!-- <div class="container">
     <div class="modal fade" id="updatermmodal" tabindex="-1" aria-labelledby="updatermmodalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -43,7 +44,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="container">
     <div class="modal fade" id="deletermmodal" tabindex="-1" aria-labelledby="deletermmodalLabel" aria-hidden="true">
@@ -55,9 +56,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" disabled name="id" id="id" value="">
-                        <input type="text" disabled name="buscar" id="buscar" value="">
-                        <input type="text" disabled name="sustituir" id="sustituir" value="">
+                        <input type="text" name="id" id="id" value="">
+                        <input type="text" name="guid" id="guid" value="">
+                        <input type="text" name="buscar" id="buscar" value="">
+                        <input type="text" name="sustituir" id="sustituir" value="">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -78,11 +80,9 @@
     $table_rm_plugin = $wpdb->prefix . 'rm_plugin';
 
     if (isset($_POST['buttoncreaterm'])) {
+        $guid = $_POST['guid'];
         $buscar = $_POST['buscar'];
         $sustituir = $_POST['sustituir'];
-
-        global $wpdb;
-        $table_rm_plugin = $wpdb->prefix . 'rm_plugin';
 
         $wpdb->query(
             $wpdb->prepare(
@@ -90,21 +90,23 @@
                 SET post_content = REPLACE(post_content, %s, %s),
                     post_title = REPLACE(post_title, %s, %s),
                     post_name = REPLACE(post_name, %s, %s)
-                WHERE post_type = 'post'",
+                WHERE guid = %s",
                 $buscar,
                 $sustituir,
                 $buscar,
                 $sustituir,
                 $buscar,
-                $sustituir
+                $sustituir,
+                $guid,
             )
         );
 
         $wpdb->insert(
             $table_rm_plugin,
             array(
-                'Buscar' => $buscar,
-                'Sustituir' => $sustituir
+                'guid' => $guid,
+                'buscar' => $buscar,
+                'sustituir' => $sustituir
             )
         );
 
@@ -113,59 +115,58 @@
         echo '</br>';
     }
 
-    if (isset($_POST['buttonupdaterm'])) {
+    // if (isset($_POST['buttonupdaterm'])) {
 
-        $id = $_POST['id'];
+    //     $id = $_POST['id'];
 
-        $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_rm_plugin WHERE ID = %d", $id));
+    //     $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_rm_plugin WHERE ID = %d", $id));
 
-        if ($result) {
-            $buscar = $_POST['buscar'];
-            $sustituir = $_POST['sustituir'];
+    //     if ($result) {
+    //         $buscar = $_POST['buscar'];
+    //         $sustituir = $_POST['sustituir'];
+    //         $wpdb->query(
+    //             $wpdb->prepare(
+    //                 "UPDATE {$wpdb->prefix}posts
+    //                 SET post_content = REPLACE(post_content, %s, %s),
+    //                     post_title = REPLACE(post_title, %s, %s),
+    //                     post_name = REPLACE(post_name, %s, %s)
+    //                 WHERE post_type = 'post'",
+    //                 $buscar,
+    //                 $sustituir,
+    //                 $buscar,
+    //                 $sustituir,
+    //                 $buscar,
+    //                 $sustituir,
+    //             )
+    //         );
 
-            $table_posts = $wpdb->prefix . 'posts';
-            $wpdb->query(
-                $wpdb->prepare(
-                    "UPDATE {$wpdb->prefix}posts
-                    SET post_content = REPLACE(post_content, %s, %s),
-                        post_title = REPLACE(post_title, %s, %s),
-                        post_name = REPLACE(post_name, %s, %s)
-                    WHERE post_type = 'post'",
-                    $buscar,
-                    $sustituir,
-                    $buscar,
-                    $sustituir,
-                    $buscar,
-                    $sustituir,
-                )
-            );
+    //         $wpdb->update(
+    //             $table_rm_plugin,
+    //             array(
+    //                 'Buscar' => $buscar,
+    //                 'Sustituir' => $sustituir
+    //             ),
+    //             array(
+    //                 'id' => $id
+    //             )
+    //         );
 
-            $wpdb->update(
-                $table_rm_plugin,
-                array(
-                    'Buscar' => $buscar,
-                    'Sustituir' => $sustituir
-                ),
-                array(
-                    'ID' => $id
-                )
-            );
-
-            echo '</br>';
-            echo 'Actualización completada.';
-            echo '</br>';
-        }
-    }
+    //         echo '</br>';
+    //         echo 'Actualización completada.';
+    //         echo '</br>';
+    //     }
+    // }
 
     if (isset($_POST['buttondeleterm'])) {
         $id = $_POST['id'];
+        $guid = $_POST['guid'];
         $buscar = $_POST['buscar'];
         $sustituir = $_POST['sustituir'];
 
         $wpdb->delete(
             $table_rm_plugin,
             array(
-                'ID' => $id
+                'id' => $id
             )
         );
 
@@ -179,13 +180,14 @@
                 SET post_content = REPLACE(post_content, %s, %s),
                     post_title = REPLACE(post_title, %s, %s),
                     post_name = REPLACE(post_name, %s, %s)
-                WHERE post_type = 'post'",
+                    WHERE guid = %s",
                 $sustituir,
                 $buscar,
                 $sustituir,
                 $buscar,
                 $sustituir,
                 $buscar,
+                $guid
             )
         );
         echo 'Actualización completada.';
@@ -198,22 +200,26 @@
         echo '<table class="wp-list-table widefat striped">';
         echo '<thead>';
         echo '<tr>';
+        echo '<th>id</th>';
+        echo '<th>guid</th>';
         echo '<th>Buscar</th>';
         echo '<th>Sustituir</th>';
-        echo '<th>Editar</th>';
+        // echo '<th>Editar</th>';
         echo '<th>Borrar</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
         foreach ($results as $result) {
             echo '<tr>';
-            echo '<td>' . $result->Buscar . '</td>';
-            echo '<td>' . $result->Sustituir . '</td>';
+            echo '<td>' . $result->id . '</td>';
+            echo '<td>' . $result->guid . '</td>';
+            echo '<td>' . $result->buscar . '</td>';
+            echo '<td>' . $result->sustituir . '</td>';
+            // echo '<td>';
+            // echo '<button type="button" class="button button-secondary" onclick="openModalUpdate(\'updatermmodal\', \'' . $result->id . '\', \'' . $result->buscar . '\', \'' . $result->sustituir . '\')">Editar</button>';
+            // echo '</td>';
             echo '<td>';
-            echo '<button type="button" class="button button-secondary" onclick="openModalUpdate(\'updatermmodal\', \'' . $result->ID . '\', \'' . $result->Buscar . '\', \'' . $result->Sustituir . '\')">Editar</button>';
-            echo '</td>';
-            echo '<td>';
-            echo '<button type="button" class="button button-secondary" onclick="openModalDelete(\'deletermmodal\', \'' . $result->ID . '\', \'' . $result->Buscar . '\', \'' . $result->Sustituir . '\')">Eliminar</button>';
+            echo '<button type="button" class="button button-secondary" onclick="openModalDelete(\'deletermmodal\', \'' . $result->id . '\', \'' . $result->guid . '\' , \'' . $result->buscar . '\', \'' . $result->sustituir . '\')">Eliminar</button>';
             echo '</td>';
             echo '</tr>';
         }
@@ -230,3 +236,38 @@
 
     ?>
 </div>
+
+
+<script>
+    function openModalCreate(modalId) {
+        var modal = document.getElementById(modalId);
+        var bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
+
+    // function openModalUpdate(modalId, id, buscar, sustituir) {
+    //     var modal = document.getElementById(modalId);
+    //     var idInput = modal.querySelector('input[name="id"]');
+    //     var idInput2 = modal.querySelector('input[name="buscar"]');
+    //     var idInput3 = modal.querySelector('input[name="sustituir"]');
+    //     idInput.value = id;
+    //     idInput2.value = buscar;
+    //     idInput3.value = sustituir;
+    //     var bsModal = new bootstrap.Modal(modal);
+    //     bsModal.show();
+    // }
+
+    function openModalDelete(modalId, id, guid, buscar, sustituir) {
+        var modal = document.getElementById(modalId);
+        var idInput = modal.querySelector('input[name="id"]');
+        var idInput2 = modal.querySelector('input[name="guid"]');
+        var idInput3 = modal.querySelector('input[name="buscar"]');
+        var idInput4 = modal.querySelector('input[name="sustituir"]');
+        idInput.value = id;
+        idInput2.value = guid;
+        idInput3.value = buscar;
+        idInput4.value = sustituir;
+        var bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
+</script>

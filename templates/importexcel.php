@@ -38,8 +38,9 @@
 
                 if (!empty($csvData)) {
                     foreach ($csvData as $row) {
-                        $buscar = $row[0];
-                        $sustituir = $row[1];
+                        $guid = $row[0];
+                        $buscar = $row[1];
+                        $sustituir = $row[2];
 
                         $wpdb->query(
                             $wpdb->prepare(
@@ -47,21 +48,23 @@
                                 SET post_content = REPLACE(post_content, %s, %s),
                                     post_title = REPLACE(post_title, %s, %s),
                                     post_name = REPLACE(post_name, %s, %s)
-                                WHERE post_type = 'post'",
+                                WHERE guid = %s",
                                 $buscar,
                                 $sustituir,
                                 $buscar,
                                 $sustituir,
                                 $buscar,
-                                $sustituir
+                                $sustituir,
+                                $guid
                             )
                         );
 
                         $wpdb->insert(
                             $table_rm_plugin,
                             array(
-                                'Buscar' => $buscar,
-                                'Sustituir' => $sustituir
+                                'guid' => $guid,
+                                'buscar' => $buscar,
+                                'sustituir' => $sustituir
                             )
                         );
                     }
