@@ -6,11 +6,11 @@ class RMPluginActivate
 
 		global $wpdb;
 		$sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}rm_plugin(
-		`id` INT NOT NULL AUTO_INCREMENT,
-		`guid` VARCHAR(155) NULL,
+		`rmid` INT NOT NULL AUTO_INCREMENT,
+		`id` VARCHAR(155) NULL,
 		`buscar` VARCHAR(155) NULL,
 		`sustituir` VARCHAR(155) NULL,
-		PRIMARY KEY (`id`));";
+		PRIMARY KEY (`rmid`));";
 		$wpdb->query($sql);
 
 		flush_rewrite_rules();

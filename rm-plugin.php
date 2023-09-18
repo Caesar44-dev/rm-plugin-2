@@ -50,7 +50,7 @@ if (!class_exists('RMPlugin')) {
 
 		public function add_admin_pages()
 		{
-			add_menu_page('RM Plugin', 'RM Plugin', 'manage_options', 'rm_plugin', array($this->callbacks, 'home'), plugin_dir_url(__FILE__) . '/admin/img/icon.svg', 1);
+			add_menu_page('RM Plugin', 'Añadir RM', 'manage_options', 'rm_plugin', array($this->callbacks, 'home'), plugin_dir_url(__FILE__) . '/admin/img/icon.svg', 1);
 			add_submenu_page('rm_plugin', 'Importar CSV', 'Importar CSV', 'manage_options', 'rm_importexcel', array($this->callbacks, 'importexcel'));
 		}
 		
